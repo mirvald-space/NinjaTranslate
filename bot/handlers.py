@@ -5,7 +5,7 @@ import logging
 from aiogram import Router, F
 from aiogram.types import Message, CallbackQuery
 from aiogram.filters import CommandStart, Command
-
+import os
 from bot.keyboards import get_language_keyboard, get_ui_language_keyboard
 from bot.localization import get_message, localize_language_names
 from bot.translations import TRANSLATIONS, translate_text
@@ -18,7 +18,7 @@ router = Router()
 user_states = {}
 
 # Admin user IDs
-ADMIN_IDS = [1234567890]  # Replace with your actual admin ID(s)
+ADMIN_IDS = os.getenv("ADMIN_IDS", "").split(",")  # Replace with your actual admin ID(s)
 
 @router.message(CommandStart())
 async def cmd_start(message: Message):
