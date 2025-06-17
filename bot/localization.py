@@ -6,9 +6,11 @@ from bot.translations import AR_LANG_NAMES
 # Messages in both languages
 MESSAGES = {
     "en": {
-        "welcome": "Welcome to NinjaTranslate! Please select translation direction:",
+        "welcome": "Welcome to NinjaTranslate! Please select source language:",
         "selected": "Selected {from_lang} → {to_lang} translation.\nSend me text to translate (max 2000 characters).",
-        "select_first": "Please select translation direction first:",
+        "selected_source": "Source language: {source_lang}\nNow select target language:",
+        "select_source": "Please select source language:",
+        "select_first": "Please select source language first:",
         "text_too_long": "Text is too long. Maximum is 2000 characters.",
         "error": "Error during translation. Please try again later.",
         "language_cmd": "Select interface language:",
@@ -16,9 +18,11 @@ MESSAGES = {
         "stats": "📊 Bot Statistics\n\n👥 Total Users: {total_users}\n🇬🇧 English UI: {english_ui}\n🇸🇦 Arabic UI: {arabic_ui}"
     },
     "ar": {
-        "welcome": "مرحبًا بك في NinjaTranslate! يرجى اختيار اتجاه الترجمة:",
+        "welcome": "مرحبًا بك في NinjaTranslate! يرجى اختيار لغة المصدر:",
         "selected": "تم اختيار الترجمة من {from_lang} إلى {to_lang}.\nأرسل لي النص المراد ترجمته (بحد أقصى 2000 حرف).",
-        "select_first": "يرجى اختيار اتجاه الترجمة أولاً:",
+        "selected_source": "لغة المصدر: {source_lang}\nاختر الآن لغة الهدف:",
+        "select_source": "يرجى اختيار لغة المصدر:",
+        "select_first": "يرجى اختيار لغة المصدر أولاً:",
         "text_too_long": "النص طويل جدًا. الحد الأقصى هو 2000 حرف.",
         "error": "حدث خطأ أثناء الترجمة. يرجى المحاولة مرة أخرى لاحقًا.",
         "language_cmd": "اختر لغة الواجهة:",
@@ -56,7 +60,7 @@ def get_message(lang: str, key: str, **kwargs) -> str:
         return message.format(**kwargs)
     return message
     
-def localize_language_names(lang: str, from_lang: str, to_lang: str) -> tuple:
+def localize_language_names(lang: str, from_lang: str, to_lang: str = None) -> tuple:
     """
     Localize language names for the UI.
     
@@ -70,8 +74,11 @@ def localize_language_names(lang: str, from_lang: str, to_lang: str) -> tuple:
     """
     if lang == "ar":
         from_lang = AR_LANG_NAMES.get(from_lang, from_lang)
-        to_lang = AR_LANG_NAMES.get(to_lang, to_lang)
+        if to_lang:
+            to_lang = AR_LANG_NAMES.get(to_lang, to_lang)
     
+    if to_lang is None:
+        return (from_lang,)
     return from_lang, to_lang
 
 def get_language_name(ui_lang: str, lang_code: str) -> str:

@@ -6,16 +6,52 @@ import logging
 import aiohttp
 from config import config
 
-# Translation directions
-TRANSLATIONS = {
-    "ar_en": {"from": "Arabic", "to": "English"},
-    "en_ar": {"from": "English", "to": "Arabic"}
+# List of most common languages with emoji flags
+LANGUAGES = {
+    "en": "🇬🇧 English",
+    "ar": "🇸🇦 Arabic",
+    "es": "🇪🇸 Spanish",
+    "fr": "🇫🇷 French",
+    "de": "🇩🇪 German",
+    "zh": "🇨🇳 Chinese",
+    "ru": "🇷🇺 Russian",
+    "pt": "🇵🇹 Portuguese",
+    "ja": "🇯🇵 Japanese",
+    "it": "🇮🇹 Italian",
+    "ko": "🇰🇷 Korean",
+    "tr": "🇹🇷 Turkish",
+    "nl": "🇳🇱 Dutch",
+    "sv": "🇸🇪 Swedish",
+    "pl": "🇵🇱 Polish",
+    "vi": "🇻🇳 Vietnamese",
+    "hi": "🇮🇳 Hindi",
+    "uk": "🇺🇦 Ukrainian"
 }
 
-# Arabic language names
+# There are no predefined translation directions anymore
+# The user will select source and target languages separately
+TRANSLATIONS = {}
+
+# Localized language names for Arabic UI
 AR_LANG_NAMES = {
-    "Arabic": "العربية",
-    "English": "الإنجليزية"
+    "🇬🇧 English": "🇬🇧 الإنجليزية",
+    "🇸🇦 Arabic": "🇸🇦 العربية",
+    "🇪🇸 Spanish": "🇪🇸 الإسبانية",
+    "🇫🇷 French": "🇫🇷 الفرنسية",
+    "🇩🇪 German": "🇩🇪 الألمانية",
+    "🇨🇳 Chinese": "🇨🇳 الصينية",
+    "🇷🇺 Russian": "🇷🇺 الروسية",
+    "🇵🇹 Portuguese": "🇵🇹 البرتغالية",
+    "🇯🇵 Japanese": "🇯🇵 اليابانية",
+    "🇮🇹 Italian": "🇮🇹 الإيطالية",
+    "🇰🇷 Korean": "🇰🇷 الكورية",
+    "🇹🇷 Turkish": "🇹🇷 التركية",
+    "🇳🇱 Dutch": "🇳🇱 الهولندية",
+    "🇸🇪 Swedish": "🇸🇪 السويدية",
+    "🇵🇱 Polish": "🇵🇱 البولندية",
+    "🇻🇳 Vietnamese": "🇻🇳 الفيتنامية",
+    "🇮🇳 Hindi": "🇮🇳 الهندية",
+    "🇺🇦 Ukrainian": "🇺🇦 الأوكرانية"
 }
 
 async def translate_text(text: str, source_lang: str, target_lang: str) -> str:
@@ -33,6 +69,10 @@ async def translate_text(text: str, source_lang: str, target_lang: str) -> str:
     Raises:
         Exception: If translation fails
     """
+    # Extract just the language name without the emoji
+    source_lang_name = source_lang.split(" ", 1)[1] if " " in source_lang else source_lang
+    target_lang_name = target_lang.split(" ", 1)[1] if " " in target_lang else target_lang
+    
     headers = {
         "Authorization": f"Bearer {config.xai_api_key}",
         "Content-Type": "application/json"
@@ -43,7 +83,7 @@ async def translate_text(text: str, source_lang: str, target_lang: str) -> str:
         "messages": [
             {
                 "role": "system",
-                "content": f"You are a professional translator. Translate the following text from {source_lang} to {target_lang}. Return only the translated text without explanations or additional comments."
+                "content": f"You are a professional translator. Translate the following text from {source_lang_name} to {target_lang_name}. Return only the translated text without explanations or additional comments. If you can't identify the language, respond with the original text."
             },
             {
                 "role": "user",

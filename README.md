@@ -1,10 +1,12 @@
 # NinjaTranslate
 
-A Telegram translator bot that uses X.AI API to translate between Arabic and English.
+A Telegram translator bot that uses X.AI API to translate between any languages.
 
 ## Features
 
-- Translations between Arabic and English
+- Universal translation between 18+ languages
+- Flag emojis for easy language identification
+- Two-step language selection flow (source and target)
 - Easy language selection via inline buttons
 - Handles up to 2000 characters per request
 - Error handling for API failures
@@ -77,13 +79,15 @@ The bot will automatically use webhook mode when deployed to Render and includes
 ## Usage
 
 1. Start a chat with your bot on Telegram
-2. Send `/start` to get language selection buttons
-3. Select a translation direction
-4. Send any text (up to 2000 characters) to translate
+2. Send `/start` to begin translation
+3. Select the source language
+4. Select the target language
+5. Send any text (up to 2000 characters) to translate
 
 ## Bot Commands
 
-- `/start` - Start the bot and display language selection
+- `/start` - Start the bot and display source language selection
+- `/translate` or `/tr` - Start a new translation
 - `/language` or `/lang` - Change the interface language (Arabic/English)
 - `/stats` - View bot usage statistics (admin only)
 
@@ -101,7 +105,25 @@ User collection:
 }
 ```
 
-## Supported Translation Directions
+## Supported Languages
 
-- Arabic → English
-- English → Arabic 
+- 🇬🇧 English
+- 🇸🇦 Arabic
+- 🇪🇸 Spanish
+- 🇫🇷 French
+- 🇩🇪 German
+- 🇨🇳 Chinese
+- 🇷🇺 Russian
+- 🇵🇹 Portuguese
+- 🇯🇵 Japanese
+- 🇮🇹 Italian
+- 🇰🇷 Korean
+- 🇹🇷 Turkish
+- 🇳🇱 Dutch
+- 🇸🇪 Swedish
+- 🇵🇱 Polish
+- 🇻🇳 Vietnamese
+- 🇮🇳 Hindi
+- 🇺🇦 Ukrainian
+
+More languages can be easily added by extending the `LANGUAGES` dictionary in `translations.py`. 

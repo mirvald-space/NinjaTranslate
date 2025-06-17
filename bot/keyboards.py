@@ -2,23 +2,61 @@
 Keyboard module for the NinjaTranslate bot.
 """
 from aiogram.utils.keyboard import InlineKeyboardBuilder
-from bot.translations import TRANSLATIONS
+from bot.translations import LANGUAGES
 from bot.localization import get_language_name
 
 def get_language_keyboard():
     """
-    Create an inline keyboard with language selection buttons.
+    Create an inline keyboard to select source language.
     
     Returns:
-        Inline keyboard markup with translation direction buttons
+        Inline keyboard markup with source language buttons
     """
     builder = InlineKeyboardBuilder()
-    for key, value in TRANSLATIONS.items():
+    
+    # Title button (not clickable)
+    builder.button(
+        text="🌍 SELECT SOURCE LANGUAGE 🌍",
+        callback_data="ignore"
+    )
+    
+    # Add language buttons, 3 in a row
+    for lang_code, lang_name in LANGUAGES.items():
         builder.button(
-            text=f"{value['from']}→{value['to']}", 
-            callback_data=key
+            text=f"{lang_name}",
+            callback_data=f"source_{lang_code}"
         )
-    builder.adjust(2)
+    
+    builder.adjust(1, 2, 2, 2)  # First row for title, then 2 buttons per row
+    return builder.as_markup()
+
+def get_target_language_keyboard(source_lang_code):
+    """
+    Create an inline keyboard to select target language.
+    
+    Args:
+        source_lang_code: Source language code selected by user
+    
+    Returns:
+        Inline keyboard markup with target language buttons
+    """
+    builder = InlineKeyboardBuilder()
+    
+    # Title button (not clickable)
+    builder.button(
+        text="🎯 SELECT TARGET LANGUAGE 🎯",
+        callback_data="ignore"
+    )
+    
+    # Add language buttons, excluding source language
+    for lang_code, lang_name in LANGUAGES.items():
+        if lang_code != source_lang_code:
+            builder.button(
+                text=f"{lang_name}",
+                callback_data=f"target_{source_lang_code}_{lang_code}"
+            )
+    
+    builder.adjust(1, 2, 2, 2)  # First row for title, then 2 buttons per row
     return builder.as_markup()
 
 def get_ui_language_keyboard(ui_lang: str):
@@ -38,10 +76,13 @@ def get_ui_language_keyboard(ui_lang: str):
         lang_name = get_language_name(ui_lang, lang_code)
         # Add a ✓ mark to the current language
         if lang_code == ui_lang:
-            lang_name = f"✓ {lang_name}"
-            
+            lang_name = f"✅ {lang_name}"
+        
+        # Add emoji flags
+        flag = "🇬🇧" if lang_code == "en" else "🇸🇦" if lang_code == "ar" else ""
+        
         builder.button(
-            text=lang_name,
+            text=f"{flag} {lang_name}",
             callback_data=f"lang_{lang_code}"
         )
             
