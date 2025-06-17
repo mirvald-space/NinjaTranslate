@@ -4,7 +4,11 @@ Main entry point for the NinjaTranslate bot.
 import asyncio
 import logging
 from aiohttp import web, ClientSession
-from bot.bot import start_bot
+from aiogram import Bot, Dispatcher
+from aiogram.webhook.aiohttp_server import SimpleRequestHandler, setup_application
+from bot.handlers import router
+from bot.db import init_db
+from config import config
 import os
 
 # Create web application for Render
@@ -31,15 +35,51 @@ async def keep_alive(app_url):
         await asyncio.sleep(840)  # 14 minutes * 60 seconds
 
 async def setup_server():
-    # Start the bot
-    asyncio.create_task(start_bot())
+    # Configure logging
+    logging.basicConfig(
+        level=logging.INFO,
+        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    )
+    
+    # Validate configuration
+    if not config.validate_tokens():
+        logging.error("Invalid configuration: Missing BOT_TOKEN or XAI_API_KEY")
+        return
+    
+    # Initialize database
+    await init_db()
+    
+    # Configure port and URLs
+    port = int(os.environ.get('PORT', 8080))
+    base_url = os.environ.get('APP_URL', f'http://localhost:{port}')
+    webhook_path = "/webhook"
+    webhook_url = f"{base_url}{webhook_path}"
+    
+    # Initialize bot and dispatcher with webhook mode
+    bot = Bot(token=config.bot_token)
+    dp = Dispatcher()
+    
+    # Include routers
+    dp.include_router(router)
     
     # Create web application
     app = web.Application()
+    
+    # Add main route
     app.router.add_get('/', handle_root)
     
-    # Configure port (Render requires using PORT environment variable)
-    port = int(os.environ.get('PORT', 8080))
+    # Setup webhook handling
+    SimpleRequestHandler(
+        dispatcher=dp,
+        bot=bot,
+    ).register(app, path=webhook_path)
+    
+    # Setup application
+    setup_application(app, dp, bot=bot)
+    
+    # Set webhook
+    await bot.set_webhook(url=webhook_url)
+    logging.info(f"Webhook set to URL: {webhook_url}")
     
     # Start the server
     runner = web.AppRunner(app)
@@ -49,12 +89,9 @@ async def setup_server():
     
     logging.info(f"Web server started on port {port}")
     
-    # Get URL for pinging the application (from environment variable or use localhost)
-    app_url = os.environ.get('APP_URL', f'http://localhost:{port}')
-    
-    # Start task to prevent sleep mode
-    asyncio.create_task(keep_alive(app_url))
-    logging.info(f"Keep-alive service started, pinging {app_url}")
+    # Start keep-alive task
+    asyncio.create_task(keep_alive(base_url))
+    logging.info(f"Keep-alive service started, pinging {base_url}")
     
     # Wait indefinitely
     while True:
