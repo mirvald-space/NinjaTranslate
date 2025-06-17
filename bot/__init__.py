@@ -1,0 +1,3 @@
+"""
+NinjaTranslate bot package.
+""" 

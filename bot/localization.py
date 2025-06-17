@@ -1,0 +1,88 @@
+"""
+Localization module for the NinjaTranslate bot.
+"""
+from bot.translations import AR_LANG_NAMES
+
+# Messages in both languages
+MESSAGES = {
+    "en": {
+        "welcome": "Welcome to NinjaTranslate! Please select translation direction:",
+        "selected": "Selected {from_lang} → {to_lang} translation.\nSend me text to translate (max 2000 characters).",
+        "select_first": "Please select translation direction first:",
+        "text_too_long": "Text is too long. Maximum is 2000 characters.",
+        "error": "Error during translation. Please try again later.",
+        "language_cmd": "Select interface language:",
+        "language_selected": "Interface language set to English.",
+        "stats": "📊 Bot Statistics\n\n👥 Total Users: {total_users}\n🇬🇧 English UI: {english_ui}\n🇸🇦 Arabic UI: {arabic_ui}"
+    },
+    "ar": {
+        "welcome": "مرحبًا بك في NinjaTranslate! يرجى اختيار اتجاه الترجمة:",
+        "selected": "تم اختيار الترجمة من {from_lang} إلى {to_lang}.\nأرسل لي النص المراد ترجمته (بحد أقصى 2000 حرف).",
+        "select_first": "يرجى اختيار اتجاه الترجمة أولاً:",
+        "text_too_long": "النص طويل جدًا. الحد الأقصى هو 2000 حرف.",
+        "error": "حدث خطأ أثناء الترجمة. يرجى المحاولة مرة أخرى لاحقًا.",
+        "language_cmd": "اختر لغة الواجهة:",
+        "language_selected": "تم ضبط لغة الواجهة على العربية.",
+        "stats": "📊 إحصائيات البوت\n\n👥 إجمالي المستخدمين: {total_users}\n🇬🇧 واجهة إنجليزية: {english_ui}\n🇸🇦 واجهة عربية: {arabic_ui}"
+    }
+}
+
+# Language names in both languages
+LANGUAGE_NAMES = {
+    "en": {
+        "en": "English",
+        "ar": "Arabic"
+    },
+    "ar": {
+        "en": "الإنجليزية",
+        "ar": "العربية"
+    }
+}
+
+def get_message(lang: str, key: str, **kwargs) -> str:
+    """
+    Get a localized message.
+    
+    Args:
+        lang: Language code (en/ar)
+        key: Message key
+        **kwargs: Format parameters
+        
+    Returns:
+        Localized message
+    """
+    message = MESSAGES.get(lang, MESSAGES["en"]).get(key, MESSAGES["en"][key])
+    if kwargs:
+        return message.format(**kwargs)
+    return message
+    
+def localize_language_names(lang: str, from_lang: str, to_lang: str) -> tuple:
+    """
+    Localize language names for the UI.
+    
+    Args:
+        lang: UI language (en/ar)
+        from_lang: Source language name
+        to_lang: Target language name
+        
+    Returns:
+        Tuple of localized language names
+    """
+    if lang == "ar":
+        from_lang = AR_LANG_NAMES.get(from_lang, from_lang)
+        to_lang = AR_LANG_NAMES.get(to_lang, to_lang)
+    
+    return from_lang, to_lang
+
+def get_language_name(ui_lang: str, lang_code: str) -> str:
+    """
+    Get localized name of a language.
+    
+    Args:
+        ui_lang: UI language (en/ar)
+        lang_code: Language code to get name for
+        
+    Returns:
+        Localized language name
+    """
+    return LANGUAGE_NAMES.get(ui_lang, LANGUAGE_NAMES["en"]).get(lang_code, lang_code) 
