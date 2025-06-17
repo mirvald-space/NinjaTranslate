@@ -126,7 +126,11 @@ async def check_subscription_middleware(handler, message, data):
         
         # Send subscription required message
         await message.answer(
-            get_message(ui_lang, "subscription_required", channel_links=channel_links),
+            get_message(ui_lang, "subscription_required", channel_links=channel_links) + 
+            "\n\n🎁 This bot is completely free! You just need to subscribe to use it.\n\n" +
+            "📱 Also check out my other useful bots:\n" +
+            "🎬 @Vidzillabot - Video downloader\n" +
+            "🔊 @voiceletbot - Speech to text",
             reply_markup=get_subscription_keyboard(ui_lang),
             parse_mode="HTML",
             disable_web_page_preview=True
@@ -156,7 +160,11 @@ async def cmd_start(message: Message):
     # Check subscription
     result = await check_subscription_middleware(
         lambda msg, _: msg.answer(
-            get_message(ui_lang, "welcome"),
+            get_message(ui_lang, "welcome") + 
+            "\n\n🎁 This bot is completely free! You only need to subscribe to two channels to use it.\n\n" +
+            "Check out my other useful bots:\n" +
+            "🎬 @Vidzillabot - Video downloader\n" +
+            "🔊 @voiceletbot - Speech to text",
             reply_markup=get_language_keyboard()
         ),
         message,
@@ -417,13 +425,17 @@ async def process_check_subscription_callback(callback: CallbackQuery):
         await update_subscription_status(user_id, True)
         
         await callback.message.edit_text(
-            get_message(ui_lang, "subscription_verified"),
+            get_message(ui_lang, "subscription_verified") + 
+            "\n\n🎁 This bot is completely free! Thank you for subscribing to our channels.",
             disable_web_page_preview=True
         )
         
         # Send welcome message with language keyboard
         await callback.message.answer(
-            get_message(ui_lang, "welcome"),
+            get_message(ui_lang, "welcome") + 
+            "\n\n🔥 Check out my other useful bots:\n" +
+            "🎬 @Vidzillabot - Video processing and editing\n" +
+            "🔊 @voiceletbot - Voice message tools",
             reply_markup=get_language_keyboard()
         )
     else:
@@ -453,7 +465,8 @@ async def process_check_subscription_callback(callback: CallbackQuery):
             channel_links += f"• <a href='{channel_link}'>{channel_name}</a>\n"
         
         await callback.message.edit_text(
-            get_message(ui_lang, "subscription_not_verified", channel_links=channel_links),
+            get_message(ui_lang, "subscription_not_verified", channel_links=channel_links) +
+            "\n\n🎁 This bot is completely free! You just need to subscribe to continue using it.",
             reply_markup=get_subscription_keyboard(ui_lang),
             parse_mode="HTML",
             disable_web_page_preview=True
