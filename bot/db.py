@@ -43,7 +43,9 @@ async def save_user(user_id: int, username: str, first_name: str, last_name: str
             "first_name": first_name,
             "last_name": last_name,
             "ui_lang": ui_lang,
-            "last_activity": datetime.now()
+            "last_activity": datetime.now(),
+            "subscription_verified": False,
+            "subscription_last_checked": None
         }
         
         # Update user data if exists, or insert new document
@@ -95,6 +97,29 @@ async def update_user_language(user_id: int, ui_lang: str):
     except PyMongoError as e:
         logging.error(f"Error updating user language: {e}")
 
+async def update_subscription_status(user_id: int, verified: bool):
+    """
+    Update user's subscription verification status.
+    
+    Args:
+        user_id: Telegram user ID
+        verified: Whether user has verified subscriptions
+    """
+    try:
+        await users_collection.update_one(
+            {"user_id": user_id},
+            {
+                "$set": {
+                    "subscription_verified": verified,
+                    "subscription_last_checked": datetime.now(),
+                    "last_activity": datetime.now()
+                }
+            }
+        )
+        logging.info(f"User subscription status updated: {user_id}, verified: {verified}")
+    except PyMongoError as e:
+        logging.error(f"Error updating subscription status: {e}")
+
 async def get_stats():
     """
     Get basic usage statistics.
@@ -106,16 +131,19 @@ async def get_stats():
         total_users = await users_collection.count_documents({})
         english_ui = await users_collection.count_documents({"ui_lang": "en"})
         arabic_ui = await users_collection.count_documents({"ui_lang": "ar"})
+        subscribed_users = await users_collection.count_documents({"subscription_verified": True})
         
         return {
             "total_users": total_users,
             "english_ui": english_ui,
-            "arabic_ui": arabic_ui
+            "arabic_ui": arabic_ui,
+            "subscribed_users": subscribed_users
         }
     except PyMongoError as e:
         logging.error(f"Error getting statistics: {e}")
         return {
             "total_users": 0,
             "english_ui": 0,
-            "arabic_ui": 0
+            "arabic_ui": 0,
+            "subscribed_users": 0
         } 

@@ -22,6 +22,7 @@ A Telegram translator bot that uses X.AI API to translate between any languages.
 - Admin statistics
 - Webhook support for cloud deployment
 - Auto-ping to prevent idle state on free hosting plans
+- Subscription requirement system (users must subscribe to specified channels to use the bot)
 
 ## Project Structure
 
@@ -53,6 +54,9 @@ NinjaTranslate/
    XAI_API_KEY=your_xai_api_key_here
    MONGO_URI=mongodb://localhost:27017
    MONGO_DB=ninja_translate_bot
+   CHANNEL_ID_1=@your_first_channel
+   CHANNEL_ID_2=@your_second_channel
+   ADMIN_IDS=123456789,987654321
    ```
 3. Install dependencies:
    ```
@@ -78,6 +82,9 @@ NinjaTranslate/
    MONGO_URI=your_mongodb_connection_string
    MONGO_DB=ninja_translate_bot
    APP_URL=https://your-app-name.onrender.com
+   CHANNEL_ID_1=@your_first_channel
+   CHANNEL_ID_2=@your_second_channel
+   ADMIN_IDS=123456789,987654321
    ```
 5. Deploy the service
 
@@ -86,10 +93,12 @@ The bot will automatically use webhook mode when deployed to Render and includes
 ## Usage
 
 1. Start a chat with your bot on Telegram
-2. Send `/start` to begin translation
-3. Select the source language
-4. Select the target language
-5. Send any text (up to 2000 characters) to translate
+2. Subscribe to the required channels
+3. Verify your subscription when prompted
+4. Send `/start` to begin translation
+5. Select the source language
+6. Select the target language
+7. Send any text (up to 2000 characters) to translate
 
 ## Bot Commands
 
@@ -97,6 +106,16 @@ The bot will automatically use webhook mode when deployed to Render and includes
 - `/translate` or `/tr` - Start a new translation
 - `/language` or `/lang` - Change the interface language (Arabic/English)
 - `/stats` - View bot usage statistics (admin only)
+
+## Subscription System
+
+The bot requires users to be subscribed to specified channels to use its translation functions:
+
+- Set the channel usernames/IDs in your environment variables (`CHANNEL_ID_1` and `CHANNEL_ID_2`)
+- Users will be prompted to subscribe when they first use the bot
+- After subscribing, they can click the "Check Subscription" button
+- The bot periodically re-checks subscription status (configurable interval)
+- Admin users (specified by `ADMIN_IDS`) bypass the subscription requirement
 
 ## Database Structure
 
@@ -108,7 +127,9 @@ User collection:
   "first_name": "First",          // User's first name
   "last_name": "Last",            // User's last name
   "ui_lang": "en",                // Interface language (en/ar)
-  "last_activity": ISODate(...)   // Last activity timestamp
+  "last_activity": ISODate(...),  // Last activity timestamp
+  "subscription_verified": true,  // Whether user has verified subscriptions
+  "subscription_last_checked": ISODate(...) // When subscription was last checked
 }
 ```
 

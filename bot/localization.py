@@ -15,7 +15,11 @@ MESSAGES = {
         "error": "Error during translation. Please try again later.",
         "language_cmd": "Select interface language:",
         "language_selected": "Interface language set to English.",
-        "stats": "📊 Bot Statistics\n\n👥 Total Users: {total_users}\n🇬🇧 English UI: {english_ui}\n🇸🇦 Arabic UI: {arabic_ui}"
+        "stats": "📊 Bot Statistics\n\n👥 Total Users: {total_users}\n🇬🇧 English UI: {english_ui}\n🇸🇦 Arabic UI: {arabic_ui}\n💫 Subscribed Users: {subscribed_users}",
+        "subscription_required": "⚠️ Subscription Required ⚠️\n\nTo use NinjaTranslate bot, you need to subscribe to the following channels:\n\n{channel_links}\n\nAfter subscribing, click the \"Check Subscription\" button below.",
+        "subscription_check": "Check Subscription",
+        "subscription_verified": "✅ Thank you! Your subscription has been verified. You can now use the bot.",
+        "subscription_not_verified": "❌ You need to subscribe to all required channels to use the bot.\n\nPlease subscribe to:\n\n{channel_links}\n\nAfter subscribing, click the \"Check Subscription\" button again."
     },
     "ar": {
         "welcome": "مرحبًا بك في NinjaTranslate! يرجى اختيار لغة المصدر:",
@@ -27,7 +31,11 @@ MESSAGES = {
         "error": "حدث خطأ أثناء الترجمة. يرجى المحاولة مرة أخرى لاحقًا.",
         "language_cmd": "اختر لغة الواجهة:",
         "language_selected": "تم ضبط لغة الواجهة على العربية.",
-        "stats": "📊 إحصائيات البوت\n\n👥 إجمالي المستخدمين: {total_users}\n🇬🇧 واجهة إنجليزية: {english_ui}\n🇸🇦 واجهة عربية: {arabic_ui}"
+        "stats": "📊 إحصائيات البوت\n\n👥 إجمالي المستخدمين: {total_users}\n🇬🇧 واجهة إنجليزية: {english_ui}\n🇸🇦 واجهة عربية: {arabic_ui}\n💫 المستخدمون المشتركون: {subscribed_users}",
+        "subscription_required": "⚠️ الاشتراك مطلوب ⚠️\n\nلاستخدام بوت NinjaTranslate، يجب عليك الاشتراك في القنوات التالية:\n\n{channel_links}\n\nبعد الاشتراك، انقر على زر \"التحقق من الاشتراك\" أدناه.",
+        "subscription_check": "التحقق من الاشتراك",
+        "subscription_verified": "✅ شكراً لك! تم التحقق من اشتراكك. يمكنك الآن استخدام البوت.",
+        "subscription_not_verified": "❌ يجب عليك الاشتراك في جميع القنوات المطلوبة لاستخدام البوت.\n\nيرجى الاشتراك في:\n\n{channel_links}\n\nبعد الاشتراك، انقر على زر \"التحقق من الاشتراك\" مرة أخرى."
     }
 }
 

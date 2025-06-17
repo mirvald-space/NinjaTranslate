@@ -3,7 +3,7 @@ Keyboard module for the NinjaTranslate bot.
 """
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 from bot.translations import LANGUAGES
-from bot.localization import get_language_name
+from bot.localization import get_message, get_language_name
 
 def get_language_keyboard():
     """
@@ -87,4 +87,23 @@ def get_ui_language_keyboard(ui_lang: str):
         )
             
     builder.adjust(2)
+    return builder.as_markup()
+
+def get_subscription_keyboard(ui_lang: str):
+    """
+    Create a keyboard with subscription check button.
+    
+    Args:
+        ui_lang: UI language code
+        
+    Returns:
+        Inline keyboard with subscription check button
+    """
+    builder = InlineKeyboardBuilder()
+    
+    builder.button(
+        text=get_message(ui_lang, "subscription_check"),
+        callback_data="check_subscription"
+    )
+    
     return builder.as_markup() 
