@@ -1,6 +1,13 @@
 # NinjaTranslate
 
+![NinjaTranslate Cover](cover.png)
+
 A Telegram translator bot that uses X.AI API to translate between any languages.
+
+**README Languages**
+- 🇬🇧 [English](README.md) (current)
+- 🇺🇦 [Українська](README_uk.md)
+- 🇷🇺 [Русский](README_ru.md)
 
 ## Features
 
